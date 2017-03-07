@@ -26,8 +26,6 @@ const config = {
     cssUrl: ['src/css/*.scss'],
     jsUrl: ['src/js/lib/*.js'],
     htmlUrl: ['src/*.html'],
-    imgUrl: ['src/img/*.png', 'src/img/*.jpg'],
-    fontUrl: ['src/fonts'],
     es6Url: ['src/js/*.js']
 };
 
@@ -105,7 +103,7 @@ const build = {
     // 配置服务器
     webserver: (s) => gulp.src(s)
         .pipe(webserver({
-            port: 3000,
+            port: 8090,
             host: '192.168.2.59',
             livereload: true,
             open: true,
@@ -178,7 +176,7 @@ gulp.task('buildImg', () => build.img(config.imgUrl, config.output));
 gulp.task('buildFont', () => build.font(config.fontUrl, config.output));
 
 // 默认执行
-gulp.task('default', ['buildImg', 'buildFont', 'buildEs6', 'buildJs', 'buildCss', 'buildHtml', 'watch', 'webserver']);
+gulp.task('default', ['buildEs6', 'buildJs', 'buildCss', 'buildHtml', 'watch', 'webserver']);
 // gulp.task('default', 'buildWebpack');
 
 // 监听修改
@@ -188,7 +186,5 @@ gulp.task('watch', () => {
     gulp.watch(config.htmlUrl, ['buildHtml']);
 
     gulp.watch(config.es6Url, ['buildEs6']);
-
-    gulp.watch(config.imgUrl, ['buildImg']);
 
 });
