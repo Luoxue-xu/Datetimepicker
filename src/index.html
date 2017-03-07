@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="UTF-8">
+<meta name="renderer" content="webkit">
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<title>股票查询系统</title>
+<link rel="stylesheet" href="./css/index.css?rev=@hash">
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="user">用户名</div>
+        <nav class="navbar-collapse">
+            <ul>
+                <li><a class="active" href="javascript:;">股票查询<i class="cy-icon arrowr-icon"></i></a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="r-main">
+        <header class="r-head">
+            <h1>查询条件</h1>
+        </header>
+        <div class="r-contain">
+
+            <form class="search-form">
+                <div class="search-item two">
+                    <label class="search-item-name">连续上涨天数</label>
+                    <div class="search-item-value">
+                        <input type="number" placeholder="" value="1">
+                        <span>天</span>
+                        <input type="number" placeholder="" value="15">
+                        <span>天</span>
+                    </div>
+                </div>
+                <div class="search-item two">
+                    <label class="search-item-name">上涨幅度</label>
+                    <div class="search-item-value">
+                        <input type="number" placeholder="" value="1">
+                        <span>%</span>
+                        <input type="number" placeholder="" value="15">
+                        <span>%</span>
+                    </div>
+                </div>
+                <div class="search-item">
+                    <label class="search-item-name">交易日期</label>
+                    <div class="search-item-value">
+                        <input type="date" placeholder="" value="">
+                        <span>——</span>
+                        <input type="date" placeholder="" value="">
+                    </div>
+                </div>
+                <div class="search-item">
+                    <label class="search-item-name">排序方式</label>
+                    <div class="search-item-value">
+                        <a class="active" href="javascript:;">累计涨幅</a>
+                        <a href="javascript:;">连续天数</a>
+                    </div>
+                </div>
+                <div class="search-btns">
+                    <a class="search-btn" href="javascript:;">查询</a>
+                    <a class="export-btn" href="javascript:;">导出</a>
+                </div>
+            </form>
+
+            <div class="stock-contain">
+                <ul>
+                    <li>
+                        <span>这是股票名称</span>
+                        <span>股票代码</span>
+                        <span>第一天开盘价（元）</span>
+                        <span>最后一天收盘价（元）</span>
+                        <span>涨幅</span>
+                        <span>上涨开始日</span>
+                        <span>连续天数</span>
+                        <span>操作</span>
+                    </li>
+                    <li>
+                        <span>汇丰控股</span>
+                        <span>010213</span>
+                        <span>10.2</span>
+                        <span>12.8</span>
+                        <span class="red">20%</span>
+                        <span>2017/01/06</span>
+                        <span>10天</span>
+                        <span><a href="javascript:;">详情</a></span>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </section>
+
+<script src="js/index.js"></script>
+</body>
+</html>

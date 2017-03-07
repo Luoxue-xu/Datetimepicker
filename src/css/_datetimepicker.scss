@@ -1,0 +1,154 @@
+.datetimepicker {
+    position: fixed;
+    width: 3.2rem;
+    height: 2.72rem;
+    background: #fff;
+    box-shadow: 0 0 8px rgba(200, 200, 200, 1);
+}
+.datetimepicker-week {
+    height: .32rem;
+    border-bottom: 1px solid #dfdfdf;
+    font-size: 0;
+    span {
+        display: inline-block;
+        width: 14.2%;
+        text-align: center;
+        line-height: .31rem;
+        font-size: .12rem;
+        color: #34495E;
+        &:first-child, &:last-child {
+            color: #BDC3C7;
+        }
+    }
+}
+.datetimepicker-date {
+    height: 2.08rem;
+    font-size: 0;
+    div {
+        display: inline-block;
+        padding: .05rem 0;
+        width: 14.2%;
+        height: .35rem;
+        text-align: center;
+        font-size: .14rem;
+        color: #34495E;
+        cursor: pointer;
+        border-top: 1px solid #f2f2f2;
+        span {
+            display: inline-block;
+            width: .25rem;
+            height: .25rem;
+            line-height: .25rem;
+            border-radius: 50%;
+            overflow: hidden;
+            transition: all .3s ease-out;
+        }
+        &.gray span {
+            color: #BDC3C7;
+        }
+        &.disabled {
+            cursor: default;
+            span {
+                color: #BDC3C7;
+            }
+        }
+        &.disabled:hover span {
+            background: none;
+        }
+        &:hover span {
+            background: #ccc;
+        }
+        &.active span {
+            background: red;
+            color: #fff;
+        }
+    }
+}
+.datetimepicker-ym {
+    display: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: .32rem;
+    left: 0;
+    background: #fff;
+}
+.datetimepicker-year {
+    float: left;
+    width: .96rem;
+    height: 2.08rem;
+    overflow-y: auto;
+    span {
+        display: block;
+        height: .32rem;
+        text-align: center;
+        line-height: .32rem;
+        cursor: pointer;
+        border-bottom: 1px solid #f2f2f2;
+        font-size: .12rem;
+        transition: all .3s ease-out;
+        &.active {
+            background: red;
+            color: #fff;
+            &:hover {
+                background: red;
+            }
+        }
+        &:hover {
+            background: #dfdfdf;
+        }
+    }
+}
+.datetimepicker-month {
+    float: left;
+    width: 2.24rem;
+    height: 2.08rem;
+    font-size: 0;
+    span {
+        display: inline-block;
+        width: 50%;
+        height: .345rem;
+        border-bottom: 1px solid #f2f2f2;
+        text-align: center;
+        line-height: .32rem;
+        font-size: .12rem;
+        border-right: 1px solid #f2f2f2;
+        cursor: pointer;
+        transition: all .3s ease-out;
+        &.active {
+            background: red;
+            color: #fff;
+            &:hover {
+                background: red;
+            }
+        }
+        &:hover {
+            background: #dfdfdf;
+        }
+    }
+}
+.datetimepicker-foot {
+    height: .32rem;
+    border-top: 1px solid #dfdfdf;
+    span {
+        display: inline-block;
+        float: left;
+        height: .31rem;
+        text-align: center;
+        font-size: .14rem;
+        line-height: .31rem;
+        cursor: pointer;
+        transition: all .3s ease-out;
+        &:hover {
+            background: #dfdfdf;
+        }
+    }
+}
+.datetimepicker-index-date {
+    width: 1.92rem;
+}
+.datetimepicker-prev, .datetimepicker-next {
+    width: .64rem;
+    color: #BDC3C7;
+
+}
