@@ -1,3 +1,54 @@
 @charset 'utf-8';
 @import './reset';
 @import './datetimepicker';
+
+.header {
+    opacity: 0;
+    position: relative;
+    height: 4.5rem;
+    background: url('../img/banner.jpg') no-repeat center center;
+    text-align: center;
+    filter: grayscale(100%);
+    .title-sketch {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        h1 {
+            font-size: .24rem;
+            line-height: 1;
+        }
+        p {
+            margin-top: .24rem;
+            font-size: .14rem;
+            line-height: 1;
+        }
+    }
+}
+.navbar {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+.navbar-collapse {
+    display: flex;
+    margin: 0 auto;
+    width: 6.4rem;
+    height: .48rem;
+    li {
+        flex: 1;
+        text-align: center;
+        a {
+            display: block;
+            width: 100%;
+            height: 100%;
+            line-height: .48rem;
+            font-size: .14rem;
+            transition: all .3s ease-out;
+            &:hover {
+                background: rgba(255, 255, 255, .1);
+            }
+        }
+    }
+}

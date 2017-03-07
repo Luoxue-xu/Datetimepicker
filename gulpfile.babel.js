@@ -26,6 +26,7 @@ const config = {
     cssUrl: ['src/css/*.scss'],
     jsUrl: ['src/js/lib/*.js'],
     htmlUrl: ['src/*.html'],
+    imgUrl: ['src/img/*.jpg'],
     es6Url: ['src/js/*.js']
 };
 
@@ -176,7 +177,7 @@ gulp.task('buildImg', () => build.img(config.imgUrl, config.output));
 gulp.task('buildFont', () => build.font(config.fontUrl, config.output));
 
 // 默认执行
-gulp.task('default', ['buildEs6', 'buildJs', 'buildCss', 'buildHtml', 'watch', 'webserver']);
+gulp.task('default', ['buildImg', 'buildEs6', 'buildJs', 'buildCss', 'buildHtml', 'watch', 'webserver']);
 // gulp.task('default', 'buildWebpack');
 
 // 监听修改
@@ -186,5 +187,7 @@ gulp.task('watch', () => {
     gulp.watch(config.htmlUrl, ['buildHtml']);
 
     gulp.watch(config.es6Url, ['buildEs6']);
+
+    gulp.watch(config.es6Url, ['buildImg']);
 
 });
