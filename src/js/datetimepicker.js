@@ -5,10 +5,6 @@
  */
 
 
-/*
- * el 触发日期弹出层的元素
- */
-
 let $ = (args) => new Query(args);
 
 class Query {
@@ -41,24 +37,57 @@ class Query {
     }
 }
 
+/*
+ * el  'id/class/...'  触发日期弹出层的元素
+ * date  {Date}  设置默认选中的日期
+ * dateType  'YYYY-MM-DD'  日期显示格式
+ * maxDate  {Date}  最大可选日期
+ * weekList  [Array(7)]  星期显示列表，默认从周日开始
+ * monthList  [Array(12)]  月份显示列表，默认从一月开始
+ * btns  [Array(2)]  底部月份翻页按钮文字
+ * lang  'en'  设置显示语言，默认中文
+ * startElement 'id/class/...' 开始日期元素
+ * endElement 'id/class/...' 结束日期元素
+ */
 export default class Datetimepicker {
 
     constructor(options) {
         this.el = options.el || null; // input[type=date]元素
         this.todyDate = options.date || new Date();
         this.dateType = options.dateType || 'YYYY-MM-DD';
-        this.weekList = options.weekList || ['日', '一', '二', '三', '四', '五', '六']; // 星期列表
-        this.monthLists = options.monthList || ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月']; // 月份列表
-        this.footBtns = options.btns || ['上月', '下月']; // 底部两册切换按钮名称
+        this.maxDate = options.maxDate || null; // 最大可选日期
+
+        if (options.lang == 'en') {
+            this.weekList = options.weekList || ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+            this.monthLists = options.monthList || ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+            this.footBtns = options.btns || ['PREV', 'NEXT'];
+        } else {
+            this.weekList = options.weekList || ['日', '一', '二', '三', '四', '五', '六']; // 星期列表
+            this.monthLists = options.monthList || ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月']; // 月份列表
+            this.footBtns = options.btns || ['上月', '下月']; // 底部两册切换按钮名称
+        }
 
         this.b = document.body;
-        this.eventElement = null; // 当前操作s的元素
+        this.eventElement = null; // 当前操作的元素
+        this.isDouble = false; // 是否关联日期
+        this.doubleDate = {
+            start: null,
+            end: null
+        }; // 当前关联的日期值
+
         this.pos = {
             x: 0,
             y: 0
         }; // 位置信息
+
         if (this.el) {
+            // 若是单个，或多个无关联的日期选择元素
             this.eles = document.querySelectorAll(this.el);
+            this.e();
+        } else if (options.startElement && options.endElement) {
+            // 若是两个关联的日期元素，如开始日期——结束日期
+            this.isDouble = true;
+            this.eles = [document.querySelector(options.startElement), document.querySelector(options.endElement)];
             this.e();
         }
     }
@@ -117,7 +146,7 @@ export default class Datetimepicker {
 
     // 设置样式
     setStyle() {
-        if(this.picker) {
+        if (this.picker) {
             this.picker.style.top = `${this.pos.y}px`;
             this.picker.style.left = `${this.pos.x}px`;
         }
@@ -176,12 +205,21 @@ export default class Datetimepicker {
         let lastDate = this.getWeekInDate(date, dateLen);
         let typeClass = '';
         let code = '';
+
         for (let i = 0; i < firstDate; i++) {
-            code += `<div class="gray prev"><span class="prev">${this.getDateInDate(date, i - 2)}</span></div>`;
+            if (this.maxDate && this.compare(this.maxDate, new Date(`${this.date.year}/${this.date.month - 1}/${this.getDateInDate(date, i - 2)}`))) {
+                // 判断是否可选
+                code += `<div class="disabled"><span>${this.getDateInDate(date, i - 2)}</span></div>`;
+            } else {
+                code += `<div class="gray prev"><span class="prev">${this.getDateInDate(date, i - 2)}</span></div>`;
+            }
         }
 
         for (let j = 1; j < dateLen + 1; j++) {
-            if (this.date.date === j) {
+            if (this.maxDate && this.compare(this.maxDate, new Date(`${this.date.year}/${this.date.month}/${j}`))) {
+                // 判断是否可选
+                typeClass = 'disabled';
+            } else if (this.date.date === j) {
                 // 需要判断是否就是今日，加上下面这个条件
                 // this.date.year === d.getFullYear() && this.date.month === d.getMonth() + 1
                 typeClass = 'active';
@@ -194,7 +232,12 @@ export default class Datetimepicker {
         }
 
         for (let k = 0; k < 6 - lastDate; k++) {
-            code += `<div class="gray next"><span class="next">${this.getDateInDate(date, dateLen + k + 1)}</span></div>`;
+            if (this.maxDate && this.compare(this.maxDate, new Date(`${this.date.year}/${this.date.month + 1}/${this.getDateInDate(date, dateLen + k + 1)}`))) {
+                // 判断是否可选
+                code += `<div class="disabled"><span>${this.getDateInDate(date, dateLen + k + 1)}</span></div>`;
+            } else {
+                code += `<div class="gray next"><span class="next">${this.getDateInDate(date, dateLen + k + 1)}</span></div>`;
+            }
         }
 
         this.dateList = this.ce({
@@ -202,6 +245,11 @@ export default class Datetimepicker {
             clName: 'datetimepicker-date',
             context: code
         });
+    }
+
+    // 比较日期大小
+    compare(date, _date) {
+        return date.getTime() < _date.getTime();
     }
 
     /* 获取一个月的天数
@@ -306,11 +354,17 @@ export default class Datetimepicker {
     e() {
         let that = this;
 
-        [].map.call(this.eles, function (item) {
+        [].map.call(this.eles, (item, index) => {
             item.addEventListener('click', function (e) {
+                e.preventDefault();
                 e.stopPropagation(); // 阻止冒泡
                 that.eventElement = this;
                 that.pos = that.getOffset(e.target);
+
+                // 若是关联日期
+                if (that.isDouble) {
+                    this.dataset.datepickertype = ['start', 'end'][index];
+                }
 
                 if (this.value.length >= 8 && new Date(this.value)) {
                     that.todyDate = new Date(this.value);
@@ -325,11 +379,14 @@ export default class Datetimepicker {
 
     // 滚动固定位置
     scroll(event) {
+        if(!this.picker || this.picker.style.display === 'none') {
+            return;
+        }
         let _scroll = {
             x: document.body.scrollTop || document.documentElement.scrollLeft,
             y: document.body.scrollTop || document.documentElement.scrollTop
         };
-        if(this.eventElement) {
+        if (this.eventElement) {
             this.pos = this.getOffset(this.eventElement);
             this.setStyle();
         }
@@ -337,6 +394,9 @@ export default class Datetimepicker {
 
     // 隐藏组件
     hide(event) {
+        if(!this.picker || this.picker.style.display === 'none') {
+            return;
+        }
         let _el = event.target;
         while (_el.classList) {
             if (_el.classList.contains('datetimepicker')) {
@@ -372,6 +432,11 @@ export default class Datetimepicker {
         return _offset;
     }
 
+    // 提示信息
+    msg(text) {
+        console.log(`管理员，出bug了：${text}`);
+    }
+
     // 事件处理中心
     events() {
         var that = this;
@@ -391,6 +456,9 @@ export default class Datetimepicker {
         // 选择日期
         this.dateList.addEventListener('click', function (event) {
             if (event.target.className !== 'datetimepicker-date') {
+                if (event.target.className === 'disabled' || event.target.parentNode.className === 'disabled') {
+                    return;
+                }
                 if (event.target.className === 'prev') {
                     that.todyDate.setMonth(that.date.month - 2);
                 } else if (event.target.className === 'next') {
@@ -399,6 +467,26 @@ export default class Datetimepicker {
                 let _d = event.target.innerText;
                 that.todyDate.setDate(_d);
                 that.picker.style.display = 'none';
+
+                // 若是关联日期
+                if (that.isDouble) {
+                    switch (that.eventElement.dataset.datepickertype) {
+                    case 'start':
+                        if(that.doubleDate.end && that.compare(that.doubleDate.end, that.todyDate)) {
+                            that.msg('开始日期必须小于结束日期');
+                            return;
+                        }
+                        that.doubleDate.start = that.todyDate;
+                        break;
+                    case 'end':
+                        if(that.doubleDate.start && that.compare(that.todyDate, that.doubleDate.start)) {
+                            that.msg('结束日期必须大于开始日期');
+                            return;
+                        }
+                        that.doubleDate.end = that.todyDate;
+                        break;
+                    }
+                }
 
                 that.eventElement.value = that.translateDate(that.todyDate, that.dateType);
             }
