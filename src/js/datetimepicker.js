@@ -70,10 +70,6 @@ export default class Datetimepicker {
         this.b = document.body;
         this.eventElement = null; // 当前操作的元素
         this.isDouble = false; // 是否关联日期
-        this.doubleDate = {
-            start: null,
-            end: null
-        }; // 当前关联的日期值
 
         this.pos = {
             x: 0,
@@ -85,9 +81,18 @@ export default class Datetimepicker {
             this.eles = document.querySelectorAll(this.el);
             this.e();
         } else if (options.startElement && options.endElement) {
+            let startEl = document.querySelector(options.startElement);
+            let endEl = document.querySelector(options.endElement);
+            let sV = startEl.value;
+            let eV = startEl.value;
+
             // 若是两个关联的日期元素，如开始日期——结束日期
             this.isDouble = true;
-            this.eles = [document.querySelector(options.startElement), document.querySelector(options.endElement)];
+            this.doubleDate = {
+                start: sV.length >= 8 && new Date(sV) ? new Date(sV) : null,
+                end: eV.length >= 8 && new Date(eV) ? new Date(eV) : null
+            }; // 当前关联的日期值
+            this.eles = [startEl, endEl];
             this.e();
         }
     }
@@ -302,10 +307,10 @@ export default class Datetimepicker {
     createYm() {
         let code = '';
         let monthCode = '';
-        let minYear = this.date.year - 20;
-        let maxYear = this.date.year + 20;
+        let minYear = this.date.year - 10;
+        let maxYear = this.date.year;
 
-        for (let i = minYear; i < maxYear; i++) {
+        for (let i = maxYear; i > minYear; i--) {
             if (i === this.date.year) {
                 code += `<span class="active">${i}</span>`;
             } else {
@@ -434,7 +439,17 @@ export default class Datetimepicker {
 
     // 提示信息
     msg(text) {
-        console.log(`管理员，出bug了：${text}`);
+        let msgEl = this.ce({
+            elName: 'div',
+            clName: 'datetimepicker-msg',
+            context: text
+        });
+
+        this.picker.append(msgEl);
+
+        setTimeout(() => {
+            msgEl.remove();
+        }, 2500);
     }
 
     // 事件处理中心
@@ -466,7 +481,6 @@ export default class Datetimepicker {
                 }
                 let _d = event.target.innerText;
                 that.todyDate.setDate(_d);
-                that.picker.style.display = 'none';
 
                 // 若是关联日期
                 if (that.isDouble) {
@@ -488,6 +502,7 @@ export default class Datetimepicker {
                     }
                 }
 
+                that.picker.style.display = 'none';
                 that.eventElement.value = that.translateDate(that.todyDate, that.dateType);
             }
         }, false);

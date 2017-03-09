@@ -150,5 +150,16 @@
 .datetimepicker-prev, .datetimepicker-next {
     width: .64rem;
     color: #BDC3C7;
-
+}
+.datetimepicker-msg {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: .32rem;
+    background: rgba(220, 220, 220, 1);
+    font-size: .14rem;
+    line-height: .32rem;
+    text-align: center;
+    color: #666;
 }
