@@ -388,7 +388,7 @@ export default class Datetimepicker {
             return;
         }
         let _scroll = {
-            x: document.body.scrollTop || document.documentElement.scrollLeft,
+            x: document.body.scrollLeft || document.documentElement.scrollLeft,
             y: document.body.scrollTop || document.documentElement.scrollTop
         };
         if (this.eventElement) {
@@ -422,7 +422,7 @@ export default class Datetimepicker {
             y: parseInt(window.getComputedStyle(_el, null).height)
         };
         let _scroll = {
-            x: document.body.scrollTop || document.documentElement.scrollLeft,
+            x: document.body.scrollLeft || document.documentElement.scrollLeft,
             y: document.body.scrollTop || document.documentElement.scrollTop
         };
 
