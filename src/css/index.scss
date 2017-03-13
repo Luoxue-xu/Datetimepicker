@@ -45,9 +45,38 @@
             line-height: .48rem;
             font-size: .14rem;
             transition: all .3s ease-out;
-            &:hover {
+            &:hover, &.active {
                 background: rgba(255, 255, 255, .1);
             }
         }
     }
+}
+
+.container {
+    margin: 0 auto;
+    max-width: 12rem;
+    padding-top: .24rem;
+    padding-bottom: .48rem;
+}
+.about {
+    font-size: .14rem;
+    text-align: center;
+    .about-head {
+        padding-bottom: .24rem;
+        h2 {
+            font-size: .16rem;
+        }
+        p {
+            color: #999;
+            text-indent: .8rem;
+            font-size: .12rem;
+        }
+    }
+    p {
+        line-height: 1.8;
+    }
+}
+.example {
+    padding-bottom: 2.4rem;
+    display: none;
 }
