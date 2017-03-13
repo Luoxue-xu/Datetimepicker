@@ -84,7 +84,7 @@ export default class Datetimepicker {
             let startEl = document.querySelector(options.startElement);
             let endEl = document.querySelector(options.endElement);
             let sV = startEl.value;
-            let eV = startEl.value;
+            let eV = endEl.value;
 
             // 若是两个关联的日期元素，如开始日期——结束日期
             this.isDouble = true;
@@ -108,7 +108,7 @@ export default class Datetimepicker {
         }
         if (options.child) {
             options.child.map((item) => {
-                el.append(item);
+                el.appendChild(item);
             });
         }
         return el;
@@ -146,7 +146,7 @@ export default class Datetimepicker {
         });
         this.setStyle();
         this.events();
-        this.b.append(this.picker);
+        this.b.appendChild(this.picker);
     }
 
     // 设置样式
@@ -192,7 +192,7 @@ export default class Datetimepicker {
         this.indexDate = this.ce({
             elName: 'span',
             clName: 'datetimepicker-index-date',
-            context: date
+            context: this.translateDate(this.todyDate, 'YYYY-MM')
         });
 
         this.foot = this.ce({
@@ -204,7 +204,7 @@ export default class Datetimepicker {
 
     // 创建每月日期列表
     createDateList(date) {
-        let d = new Date(date);
+        let d = new Date();
         let dateLen = this.getDateInMonth(date);
         let firstDate = this.getWeekInDate(date, 1);
         let lastDate = this.getWeekInDate(date, dateLen);
@@ -222,15 +222,19 @@ export default class Datetimepicker {
 
         for (let j = 1; j < dateLen + 1; j++) {
             if (this.maxDate && this.compare(this.maxDate, new Date(`${this.date.year}/${this.date.month}/${j}`))) {
-                // 判断是否可选
+                // 不可选日期
                 typeClass = 'disabled';
-            } else if (this.date.date === j) {
-                // 需要判断是否就是今日，加上下面这个条件
-                // this.date.year === d.getFullYear() && this.date.month === d.getMonth() + 1
+            } else if(this.date.date === j) {
+                // 与输入框日期一致
                 typeClass = 'active';
+            } else if(this.date.year === d.getFullYear() && this.date.month === d.getMonth() + 1 && d.getDate() === j) {
+                // 今天
+                typeClass = 'index';
             } else if ('60'.indexOf(this.getWeekInDate(date, j)) !== -1) {
+                // 假日
                 typeClass = 'gray';
             } else {
+                // 正常日期
                 typeClass = '';
             }
             code += `<div class="${typeClass}"><span>${j}</span></div>`;
@@ -388,7 +392,7 @@ export default class Datetimepicker {
             return;
         }
         let _scroll = {
-            x: document.body.scrollLeft || document.documentElement.scrollLeft,
+            x: document.body.scrollTop || document.documentElement.scrollLeft,
             y: document.body.scrollTop || document.documentElement.scrollTop
         };
         if (this.eventElement) {
@@ -422,7 +426,7 @@ export default class Datetimepicker {
             y: parseInt(window.getComputedStyle(_el, null).height)
         };
         let _scroll = {
-            x: document.body.scrollLeft || document.documentElement.scrollLeft,
+            x: document.body.scrollTop || document.documentElement.scrollLeft,
             y: document.body.scrollTop || document.documentElement.scrollTop
         };
 
@@ -445,7 +449,7 @@ export default class Datetimepicker {
             context: text
         });
 
-        this.picker.append(msgEl);
+        this.picker.appendChild(msgEl);
 
         setTimeout(() => {
             msgEl.remove();
